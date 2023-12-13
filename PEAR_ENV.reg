@@ -1,0 +1,9 @@
+REGEDIT4
+[HKEY_CURRENT_USER\Environment]
+"PHP_PEAR_SYSCONF_DIR"="C:\\inetpub\\wwwroot\\sshr\\"
+"PHP_PEAR_INSTALL_DIR"="C:\\inetpub\\wwwroot\\sshr\\\\pear"
+"PHP_PEAR_DOC_DIR"="C:\\inetpub\\wwwroot\\sshr\\\\docs"
+"PHP_PEAR_BIN_DIR"="C:\\inetpub\\wwwroot\\sshr\\"
+"PHP_PEAR_DATA_DIR"="C:\\inetpub\\wwwroot\\sshr\\\\data"
+"PHP_PEAR_PHP_BIN"="C:\\php7.4\\php.exe"
+"PHP_PEAR_TEST_DIR"="C:\\inetpub\\wwwroot\\sshr\\\\tests"
