@@ -218,9 +218,17 @@ class LoginService
     {
         return $this->detailsRepository->GetAnnualServiceForTawsaya();
     }
+    public function GetServiceForGawazat()
+    {
+        return $this->detailsRepository->GetServiceForGawazat();
+    }
     public function taswaya_status_change($transaction_id,$note,$type)
     {
         return $this->detailsRepository->taswaya_status_change($transaction_id,$note,$type);
+    }
+    public function gawazat_status_change($transaction_id)
+    {
+        $this->detailsRepository->gawazat_status_change($transaction_id);
     }
     public function getAnnualApprovedForClearance()
     {

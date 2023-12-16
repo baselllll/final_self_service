@@ -96,7 +96,31 @@
                                 </div>
                                 <br/>
 
+                                @if($absence_attendance_type_id==\App\Enums\AppKeysProps::Emergency_absence_type_id()->value)
+                                    @if($check_saudia=="N")
+                                        <div class="form-floating alert alert-success">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" id="tashiraCheckbox" value="Y" name="tashiraCheckbox">
+                                                <label class="form-check-label" for="tashiraCheckbox">
+                                                    @lang('messages.Need_Tashira')
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                    @endif
+                                @endif
                                 @if($absence_attendance_type_id==\App\Enums\AppKeysProps::AnnuLeave_absence_type_id()->value)
+                                    @if($check_saudia=="N")
+                                        <div class="form-floating  alert alert-success">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" id="tashiraCheckbox" name="tashiraCheckbox">
+                                                <label class="form-check-label" for="tashiraCheckbox">
+                                                    @lang('messages.Need_Tashira')
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                    @endif
                                     <div class="form-floating">
                                         <span  style="font-weight: bold;font-size: 14px;color: #0c4128"><span>@lang('messages.Annual Days') : </span><span id="get_difference_date" style="font:bold 30px Aldhabi;color:  green"></span></span>
                                     </div>

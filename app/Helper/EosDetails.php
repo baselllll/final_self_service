@@ -16,9 +16,13 @@ class EosDetails
     public function GetEOSAttr(){
         return [
             ["type"=>"text","segment_name"=>"Resignation Reason",'ar_text'=>'سبب الاستقالة'],
+
             ["type"=>"date","segment_name"=>"Notified EOS Date",'ar_text'=>'تاريخ إخطار نهاية الخدمة '],
             ["type"=>"date","segment_name"=>"Actual EOS Date",'ar_text'=>'تاريخ نهاية الخدمة الفعلي'],
+            ["type"=>"checkbox","segment_name"=>"Visa",'ar_text'=>'تاشيرة ذهاب وعودة'],
             ["type"=>"number","segment_name"=>"Notice Period",'ar_text'=>'فترة الإشعار'],
+
+            ["type"=>"file","segment_name"=>"eos_document",'ar_text'=>'ارفق ملف'],
         ];
     }
 }

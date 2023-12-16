@@ -4,6 +4,7 @@ namespace App\Http\Controllers\FrontControllers;
 
 
 use App\Enums\AppKeysProps;
+use App\Helper\SmsVerifyHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Services\LoginService;
 use App\Http\Services\MangerLogicService;
@@ -14,11 +15,12 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     protected $employeeSigniture;
-    public function __construct(LoginService $loginService,MangerLogicService $mangerLogicService)
+    public function __construct(LoginService $loginService,MangerLogicService $mangerLogicService,SmsVerifyHelper $sms=null)
     {
         $this->loginService = $loginService;
         $this->mangerLogicService = $mangerLogicService;
         $this->employeeSigniture = AppKeysProps::UserTypeEmployee()->value;
+        $this->sms = $sms;
     }
 
     public function index(){
@@ -101,6 +103,10 @@ class HomeController extends Controller
         $absence_requests= $this->loginService->GetAnnualServiceForTawsaya();
         return view('frontend.taswaya',compact('absence_requests'));
     }
+    public function gawazat(){
+        $absence_requests= $this->loginService->GetServiceForGawazat();
+        return view('frontend.gawazat',compact('absence_requests'));
+    }
     public function Approvetaswaya(Request $request){
         $transaction_id = $request->transaction_id;
         $note = $request->note;
@@ -112,7 +118,19 @@ class HomeController extends Controller
         $transaction_id = $request->transaction_id;
         $note = $request->note;
         $this->loginService->taswaya_status_change($transaction_id,$note,'reject');
+
         Alert::warning('SUCCESS',__('messages.update_success'));
+        return back();
+    }
+    public function Approvegawazat(Request $request){
+
+        $empno = $request->empno;
+        $transaction_id = $request->transaction_id;
+        $phone_number = $this->mangerLogicService->GetPhoneEmpFromPersonId($empno)[0]->phone_number;
+        $phone_number = $this->sms->filterPhoneNumber($phone_number);
+        $this->sms->sendSMS($phone_number,__('messages.gawazat_message').":#".$transaction_id);
+        $this->loginService->gawazat_status_change($transaction_id);
+        Alert::Success('SUCCESS',__('messages.update_success'));
         return back();
     }
     public function clearance(Request $request){

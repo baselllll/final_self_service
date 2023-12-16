@@ -137,6 +137,8 @@ Route::group(['middleware' => 'check.allowed.location'], function () {
 
         // that show instruction of use website
         Route::get('taswaya',[HomeController::class,'taswaya'])->name("taswaya");
+        Route::get('gawazat',[HomeController::class,'gawazat'])->name("gawazat");
+        Route::post('approve-request-gawazat',[HomeController::class,'Approvegawazat'])->name("approve-request-gawazat");
         Route::post('reject-request-taswaya',[HomeController::class,'Rejecttaswaya'])->name("reject-request-taswaya");
         Route::post('approve-request-taswaya',[HomeController::class,'Approvetaswaya'])->name("approve-request-taswaya");
         Route::get('help',[HomeController::class,'help'])->name("help");

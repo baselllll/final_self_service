@@ -14,6 +14,15 @@ return
     'login_click'=>'Login',
     'logout'=>'logout',
     'AttachFile'=>'Attach File',
+    'gawazat'=>'gawazat',
+    'gawazat_Absence_Annual_Emegency' => 'Absence Annual Emergency Need Tashira',
+    'gawazat_Eos_Pending' => 'End of Service Approved Requests',
+    'Need_Tashira' => 'Need Visa Entry & Exist',
+    'Tashira' => 'Tashira',
+    'gawazat_message' => 'Your exit and re-entry visa request has been approved',
+    'Send_Message' => 'Notify Employee That Request Is Approved',
+
+
     'HOME'=>'History',
     'NewRequest'=>'Services',
     'Profile'=>'Profile',

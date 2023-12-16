@@ -25,27 +25,39 @@
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s"></div>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <form action="{{route('add-special-service-detail')}}" method="post">
+                    <form action="{{route('add-special-service-detail')}}" method="post" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" value="{{$service_type}}" name="service_type">
                         <input type="hidden" value="{{$main_service_request_sub}}" name="flex_name">
                         <input type="hidden" value="{{$flex_id}}" name="flex_id">
-                        <div class="row g-3">
-                            @foreach($service_attri as $input_item)
 
-                                @php
-                                    $segmentPlaceholder = app()->getLocale() == 'en' ? "Enter $input_item->segment_name" : "ادخل $input_item->ar_text";
-                                @endphp
+                        <div class="row g-3">
+
+                            @foreach($service_attri as $input_item)
+                                @if( $input_item->type=="checkbox")
+                                  @php
+                                        $segmentPlaceholder = app()->getLocale() == 'en' ? "Need $input_item->segment_name  Entry & Exist" : "تحتاج $input_item->ar_text";
+                                    @endphp
+                                @else
+                                    @php
+                                        $segmentPlaceholder = app()->getLocale() == 'en' ? "Enter $input_item->segment_name" : "ادخل $input_item->ar_text";
+                                    @endphp
+                                @endif
+
+
 
                                 <div class="col-12">
-                                    <div class="form-floating">
-                                        <input type="{{$input_item->type}}" class="form-control" name="{{$input_item->segment_name}}" id="{{$input_item->segment_name}}" placeholder="{{$segmentPlaceholder}}">
-
-                                        <label for="{{$segmentPlaceholder}}">{{$segmentPlaceholder}}</label>
+                                    <div   @if($input_item->type=="checkbox")  class="form-floating   alert alert-success" @else class="form-floating" @endif >
+                                        <div @if($input_item->type=="checkbox")  class="form-check mt-2" @else class="form-floating" @endif >
+                                            <input type="{{$input_item->type}}" class="form-control @if($input_item->type=="checkbox") form-check-input @endif" name="{{$input_item->segment_name}}"  id="{{$input_item->segment_name}}" placeholder="{{$segmentPlaceholder}}">
+                                            <label class="@if($input_item->type=="checkbox") form-check-label @endif" for="{{$segmentPlaceholder}}">{{$segmentPlaceholder}}</label>
+                                        </div>
+                                        <br/>
                                     </div>
-                                    <br/>
+
                                 </div>
                             @endforeach
+
 
 
                             <div class="row g-2">

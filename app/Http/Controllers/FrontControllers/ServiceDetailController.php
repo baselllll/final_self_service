@@ -54,6 +54,8 @@ class ServiceDetailController extends Controller
 //               }
 //           }
 
+        $check_saudia = $this->detailsEmployeeService->checkSudiaOrNot($employee->employee_number)->check_saudia;
+
 
         $time_period = $this->loginService->GetPeriodTime($absence_attendance_type_id);
         $emp_department = $this->loginService->GetReplacmentDetailsSpecificDepartment($employee->person_id);
@@ -92,7 +94,7 @@ class ServiceDetailController extends Controller
             }
         }
 
-        return view('frontend.service-details',compact('requested_notification','diffInDays','authorizedLeaveFlag','emp_department','attribute_category','additional_field','service_type','time_period','service_type','absence_attendance_type_id','name','employee','occurrence'));
+        return view('frontend.service-details',compact('requested_notification','check_saudia','diffInDays','authorizedLeaveFlag','emp_department','attribute_category','additional_field','service_type','time_period','service_type','absence_attendance_type_id','name','employee','occurrence'));
     }
 
     public function CalculateAccruals(Request $request)
@@ -108,7 +110,6 @@ class ServiceDetailController extends Controller
         }
     }
     public function AddServiceDetail(Request $request){
-
         $start_date_absence = $request->start_date;
         $end_date_absence = $request->end_date;
         $datePattern = '/^\d{4}-\d{2}-\d{2}$/';
@@ -140,6 +141,7 @@ class ServiceDetailController extends Controller
             Alert::warning('WARNING', __('messages.start_date_today'));
             return redirect()->to('profile-employee?status_request=request_service');
         }
+
 
         if($request->absence_attendance_type_id == AppKeysProps::AnnuLeave_absence_type_id()->value){
             $accrauls_available = $request->get_Accruals_data;
@@ -177,7 +179,7 @@ class ServiceDetailController extends Controller
 
             }else{
                 if ($lastRecordSameService[0]->absence_end_date >= Carbon::now()->format('Y-m-d') and str_contains($lastRecordSameService[0]->approval_status,'Rejected') == false){
-                    
+
                     Alert::warning(__('messages.added_service_validate1_title'),__('messages.added_service_validate2_message'));
                     return redirect()->to('profile-employee');
                 }
@@ -185,7 +187,7 @@ class ServiceDetailController extends Controller
 
 
         }
-       
+
         $lastRecord = $this->detailsEmployeeService->GetLastRecordFromCustomNotifyWF($employee->employee_number);
         $lastRecordApproved = $this->detailsEmployeeService->GetLastRecordApprovedFromCustomNotifyWF($employee->employee_number);
         $lastRecordApproved_Two_Approvals = $this->detailsEmployeeService->GetLastRecordApprovedForTwoApprovalsFromCustomNotifyWF($employee->employee_number);
@@ -223,7 +225,12 @@ class ServiceDetailController extends Controller
                 return redirect()->to('profile-employee');
             }
         }
-       
+        if (isset($request->tashiraCheckbox)){
+            $tashira='Y';
+        }else{
+            $tashira='N';
+        }
+
         //        if(isset($lastRecord)){
 //
 ////            if(isset($GetSick_EmP_AnnualFromCustomNotifyWF) or isset($GetAnnualFromCustomNotifyWF) or isset($GetSickFromCustomNotifyWF)){
@@ -274,7 +281,7 @@ class ServiceDetailController extends Controller
 //                }
 //            }
 ////        }
-$absence_type_file = $request->absence_type;
+        $absence_type_file = $request->absence_type;
         $fileName=null;
         if ($request->hasFile('upload_files')) {
             $file = $request->file("upload_files");
@@ -310,11 +317,11 @@ $absence_type_file = $request->absence_type;
             );
 
             $this->detailsEmployeeService->InsertDataInAbsenceTable(
-                $person_id,$employee_number,$request->start_date,$request->end_date,$absence_type,$absence_attendance_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName
+                $person_id,$employee_number,$request->start_date,$request->end_date,$absence_type,$absence_attendance_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName,$tashira
             );
         }else{
             $this->detailsEmployeeService->InsertDataInAbsenceTable(
-                $person_id,$employee_number,$request->start_date,$request->end_date,$absence_type,$absence_attendance_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName
+                $person_id,$employee_number,$request->start_date,$request->end_date,$absence_type,$absence_attendance_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName,$tashira
             );
         }
 
@@ -323,6 +330,7 @@ $absence_type_file = $request->absence_type;
         return redirect('home');
     }
     public function AddSpecialServiceDetail(Request $request){
+
         $employee =session()->get('employee');
         $person_id = $employee->person_id;
         $employee_number = $employee->employee_number;
@@ -339,8 +347,27 @@ $absence_type_file = $request->absence_type;
             'notice_Period'=>$notice_Period,
         ];
         $request['data_attribute_form'] =json_encode( $request->except(['_token','service_type']));
+        $absence_type_file = $request->absence_type;
+        $fileName=null;
+        if ($request->hasFile('eos_document')) {
+            $file = $request->file("eos_document");
+            $employeeForFile = session()->get('employee')->employee_number;
+            if ($employeeForFile) {
+                $folderPath = "documents/$employeeForFile";
+                $fileName = "$employeeForFile"."_"."$absence_type_file".$file->getClientOriginalName();
+                if (!file_exists($folderPath)) {
+                    mkdir($folderPath, 0755, true);
+                }
+                $file->move(public_path().'/'.$folderPath, $fileName);
+            }
+        }
+        if($request->Visa=="on"){
+            $tashira='Y';
+        }else{
+            $tashira='N';
+        }
         $this->detailsEmployeeService->InsertTransctionProcessWorkFlow_Special(
-            $person_id,$employee_number,null,null,$flex_name,$request->flex_id,null,null,null,null,null,null,$service_type,$data_feilds
+            $person_id,$employee_number,null,null,$flex_name,$request->flex_id,null,null,null,null,null,$fileName,$service_type,$data_feilds,$tashira
         );
         Alert::success("Employee Name: {$employee->employee_name}  ",__('messages.added_service_success'));
         return redirect('home');

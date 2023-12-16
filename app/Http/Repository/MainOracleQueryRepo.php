@@ -176,6 +176,10 @@ WHERE     ppa.analysis_criteria_id = pac.analysis_criteria_id
             ->orderByDesc('CREATION_DATE')
             ->first();
     }
+    public function checkSudiaOrNot($emp_number)
+    {
+        return DB::select("select  xxajmi_saudi_or_not($emp_number) as check_saudia from dual")[0];
+    }
     public function GetEmerg_EmPFromCustomNotifyWF($emp_number)
     {
         return DB::table('xxajmi_notif')
@@ -685,7 +689,7 @@ ORDER BY column_seq_num");
 EOD;
     }
 
-    public function InsertTransctionProcessWorkFlow($person_id, $employee_number, $date_start, $date_end, $absence_type, $absence_type_id, $comments, $replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName=null)
+    public function InsertTransctionProcessWorkFlow($person_id, $employee_number, $date_start, $date_end, $absence_type, $absence_type_id, $comments, $replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName=null,$tashira)
     {
         $transaction_id_unique = DB::select("select xxajmi_trxn_s.NEXTVAL from dual")[0]->nextval;
         try {
@@ -713,13 +717,13 @@ EOD;
                 'notified_eos_date' => null,
                 'actual_eos_date' => null,
                 'notice_period_days' => null,
-                'official_permit_comments' => $comments
+                'official_permit_comments' => $comments,
+                'jawazat_dept' => $tashira
             ]);
             DB::commit();
 
            // lanuch the custom workflow
             $this->FireCustomWorkflowOfSSHR($transaction_id_unique);
-
 
 
             if (isset($fileName)){
@@ -1038,6 +1042,17 @@ where employee_number = '$employee_number' and reg_status ='Y'
             $query->where('ABSENCE_TYPE', '=', 'Annual Leave')
                 ->orWhere('ABSENCE_TYPE', '=', 'Emergency Leave');
         })
+        ->get();
+    }
+   public function GetServiceForGawazat()
+    {
+        return DB::table('xxajmi_notif')
+        ->where(function ($query) {
+            $query
+                ->where('ABSENCE_TYPE', '=', 'Annual Leave')
+                ->orWhere('ABSENCE_TYPE', '=', 'Emergency Leave')
+                ->orWhere('service_type', '=', 'eos');
+        })->where('approval_status', '=', 'Approved')
         ->get();
     }
 
@@ -1657,6 +1672,18 @@ WHERE fifs.id_flex_num ='$flex_id'");
         }
 
     }
+    public function gawazat_status_change($transaction_id){
+        try {
+            DB::statement("UPDATE xxajmi_notif
+                 SET jawazat_status ='Y'
+                     ,update_date=SYSDATE
+               WHERE transaction_id = $transaction_id");
+
+        }catch (\Exception $exception){
+            DB::rollBack();
+        }
+
+    }
 
     public function delete_taswaya($transaction_id){
         try {
@@ -1747,7 +1774,7 @@ and language='US'");
     }
 
 
-    public function InsertTransctionProcessWorkFlow_Special($person_id, $employee_number, $date_start, $date_end, $absence_type, $absence_type_id, $comments, $replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName,$service_type,$data_feilds)
+    public function InsertTransctionProcessWorkFlow_Special($person_id, $employee_number, $date_start, $date_end, $absence_type, $absence_type_id, $comments, $replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName,$service_type,$data_feilds,$tashira)
     {
         $transaction_id_unique = DB::select("select xxajmi_trxn_s.NEXTVAL from dual")[0]->nextval;
         try {
@@ -1771,6 +1798,7 @@ and language='US'");
                 'information13' => $timePart_end_date,
                 'information14' => $difference_hours,
                 'information20' => strtolower($service_type),
+                'jawazat_dept' => $tashira,
                 'resignation_reason' => $data_feilds['resignation_Reason'],
                 'notified_eos_date' => $data_feilds['notified_EOS_Date'],
                 'actual_eos_date' => $data_feilds['actual_EOS_Date'],
