@@ -135,7 +135,7 @@
                                 </thead>
                                 <tbody>
                                 @foreach($absence_requests as $item)
-                                    @if($item->approval_status==\App\Enums\AppKeysProps::TopManger_Approved()->value)
+                                    @if($item->approval_status==\App\Enums\AppKeysProps::TopManger_Approved()->value and $item->service_type=="eos")
                                         <tr>
                                             <td style="color: white; font-size: 15px;">{{$loop->iteration }}</td>
                                             <td style="color: white">{{$item->absence_type}}</td>
