@@ -24,6 +24,9 @@ class DetailsEmployeeService
     public  function GetLastRecordFromCustomNotifyWF($emp_number){
         return  $this->detailsRepository->GetLastRecordFromCustomNotifyWF($emp_number);
     }
+    public  function checkSudiaOrNot($emp_number){
+        return  $this->detailsRepository->checkSudiaOrNot($emp_number);
+    }
     public  function GetLastRecordApprovedFromCustomNotifyWF($emp_number){
         return  $this->detailsRepository->GetLastRecordApprovedFromCustomNotifyWF($emp_number);
     }
@@ -50,16 +53,16 @@ class DetailsEmployeeService
     public function InsertSpecialSeviceTable($data){
          $this->detailsRepository->InsertSpecialSeviceTable($data);
     }
-    public  function InsertDataInAbsenceTable($person_id,$employee_number,$date_start,$date_end,$absence_type,$absence_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName=null){
+    public  function InsertDataInAbsenceTable($person_id,$employee_number,$date_start,$date_end,$absence_type,$absence_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName=null,$tashira){
         try {
-           $this->detailsRepository->InsertTransctionProcessWorkFlow($person_id,$employee_number,$date_start,$date_end,$absence_type,$absence_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName);
+           $this->detailsRepository->InsertTransctionProcessWorkFlow($person_id,$employee_number,$date_start,$date_end,$absence_type,$absence_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName,$tashira);
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
     }
-    public  function InsertTransctionProcessWorkFlow_Special($person_id,$employee_number,$date_start,$date_end,$absence_type,$absence_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName=null,$service_type=null,$data_feilds=null){
+    public  function InsertTransctionProcessWorkFlow_Special($person_id,$employee_number,$date_start,$date_end,$absence_type,$absence_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName=null,$service_type=null,$data_feilds=null,$tashira){
         try {
-           $this->detailsRepository->InsertTransctionProcessWorkFlow_Special($person_id,$employee_number,$date_start,$date_end,$absence_type,$absence_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName,$service_type,$data_feilds);
+           $this->detailsRepository->InsertTransctionProcessWorkFlow_Special($person_id,$employee_number,$date_start,$date_end,$absence_type,$absence_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName,$service_type,$data_feilds,$tashira);
         }catch (\Exception $exception){
             return $exception->getMessage();
         }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\BackEndControllers;
 
 use App\Enums\AppKeysProps;
+use App\Helper\GawazatLayer;
 use App\Helper\SmsVerifyHelper;
 use App\Helper\TaswayaLayer;
 use App\Helper\UploadDocumnetAcrchive;
@@ -36,7 +37,7 @@ class LoginController extends Controller
     protected $user_type_employee;
     protected $smsVerifyHelper;
     protected $mangerLogicService;
-    public function __construct(TaswayaLayer $taswayaLayer,LoginService $loginService,SmsVerifyHelper $smsVerifyHelper,MangerLogicService $mangerLogicService)
+    public function __construct(TaswayaLayer $taswayaLayer,GawazatLayer $gawazatLayer,LoginService $loginService,SmsVerifyHelper $smsVerifyHelper,MangerLogicService $mangerLogicService)
     {
         $this->loginService = $loginService;
         $this->smsVerifyHelper = $smsVerifyHelper;
@@ -46,6 +47,7 @@ class LoginController extends Controller
         $this->user_type_top_manger = AppKeysProps::TopManger();
         $this->user_type_employee = AppKeysProps::UserTypeEmployee();
         $this->taswayaEmp = $taswayaLayer;
+        $this->gawazatEmp = $gawazatLayer;
     }
 
 
@@ -83,6 +85,7 @@ class LoginController extends Controller
             // check otp that sent to employee expire or not and same device (ip)
             if($test_otp_as_dev == $request->verification_code or isset($employee_full_data->attribute2) and  $employee_full_data->attribute2 == $request->verification_code and $employee_full_data->attribute3 > Carbon::now() and  ($employee_full_data->attribute4 == $current_ip or $employee_full_data->attribute4 ==null)){
                 if(isset($employee)){
+
                     // $out_modal_information  that to detect show information for user login first
 
                     // open 4 interface employee,manager ,admin_mgr , top_manger
@@ -105,6 +108,12 @@ class LoginController extends Controller
                             request()->session()->save();
                         }else{
                             Session::forget('taswaya_emp');
+                        }
+                        if(in_array($employee->employee_number,$this->gawazatEmp->Employee_Avalabile())==true){
+                            Session::put('gawazat_emp',  true);
+                            request()->session()->save();
+                        }else{
+                            Session::forget('gawazat_emp');
                         }
                         if (isset($admin_mgr)){
                             $user_type = $this->user_type_admin_manger->value;
@@ -140,6 +149,12 @@ class LoginController extends Controller
                         }else{
                             Session::forget('taswaya_emp');
                         }
+                        if(in_array($employee->employee_number,$this->gawazatEmp->Employee_Avalabile())==true){
+                            Session::put('gawazat_emp',  true);
+                            request()->session()->save();
+                        }else{
+                            Session::forget('gawazat_emp');
+                        }
                         request()->session()->save();
                         return redirect()->route('home',['isFirstLogin'=>$out_modal_information]);
                     }
@@ -165,6 +180,13 @@ class LoginController extends Controller
                             request()->session()->save();
                         }else{
                             Session::forget('taswaya_emp');
+                        }
+
+                        if(in_array($employee->employee_number,$this->gawazatEmp->Employee_Avalabile())==true){
+                            Session::put('gawazat_emp',  true);
+                            request()->session()->save();
+                        }else{
+                            Session::forget('gawazat_emp');
                         }
 
 

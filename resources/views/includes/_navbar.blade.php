@@ -152,12 +152,14 @@ if(session()->has('employee') and session()->get('user_type') =="manger"){
                         <a style="font-weight: bold;text-decoration: underline"  href="{{route('taswaya')}}" class="nav-item nav-link">@lang('messages.taswaya')</a>
                         <a style="font-weight: bold;text-decoration: underline"  href="{{route('clearance')}}" class="nav-item nav-link">@lang('messages.EOS')</a>
                     @endif
+                    @if( session()->get("gawazat_emp")==true)
+                        <a style="font-weight: bold;text-decoration: underline"  href="{{route('gawazat')}}" class="nav-item nav-link">@lang('messages.gawazat')</a>
+                    @endif
                     <a style="font-weight: bold;text-decoration: underline" href="{{route('help')}}" class="nav-item nav-link">@lang('messages.help')</a>
                     <a style="font-weight: bold;" href="{{route('logout')}}" class="btn btn-primary" id="logout_btn">@lang('messages.logout')<i class="fa fa-arrow-right ms-3"></i></a>
 
 
                 @else
-                    {{--                <a href="{{route('login-page')}}" class="btn btn-primary ">@lang('messages.login_click')<i class="fa fa-arrow-right ms-3"></i></a>--}}
                 @endif
             </div>
         </div>

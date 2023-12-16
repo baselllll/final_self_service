@@ -304,34 +304,22 @@ class ProfileEmployeeController extends Controller
         return view('frontend.services-sub_category',compact('loan_services'));
     }
     public function getAttributeSpecialService($flex_id,$service_type,$main_service_request_sub){
+        $employee = session()->get('employee');
+        $check_saudia = $this->detailsEmployeeService->checkSudiaOrNot($employee->employee_number)->check_saudia;
         $service_attri = null;
         $eos = new EosDetails();
         if ($service_type=="EOS"){
             $eos =  $eos->GetEOSAttr();
+            if($check_saudia=='Y'){
+                unset($eos[3]);
+            }
             $eos =  json_encode($eos);
             $eos =  json_decode($eos);
             $service_attri = $eos;
-
-
         }
-//        $loan_attr =  $this->mangerLogicService->get_LoanRequest_service($flex_id);
 
 
-//// Translation array for segment_name
-//        $segmentTranslations = [
-//            "Bank Name" => "اسم البنك",
-//            "Loan Date" => "تاريخ القرض",
-//            "Issued Document" => "المستند المصدر",
-//            "Clearance Document from Bank" => "مستند التصفية من البنك",
-//            "Notes" => "ملاحظات"
-//        ];
-//
-//        foreach ($loan_attr as $item) {
-//            if (isset($segmentTranslations[$item->segment_name])) {
-//                $item->ar_segment_name = $segmentTranslations[$item->segment_name];
-//            }
-//        }
-        return view('frontend.services-sub_category_attribute',compact('service_attri','service_type','flex_id','main_service_request_sub'));
+        return view('frontend.services-sub_category_attribute',compact('service_attri','check_saudia','service_type','flex_id','main_service_request_sub'));
     }
 
 
