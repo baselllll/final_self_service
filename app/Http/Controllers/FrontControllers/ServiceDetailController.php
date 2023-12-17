@@ -313,7 +313,7 @@ class ServiceDetailController extends Controller
         $difference_hours = (float) $difference_hours;
         if($absence_type and isset( $request->unauthorized_absence_name)){
             $this->detailsEmployeeService->InsertDataInAbsenceTable(
-                $person_id,$employee_number,$request->start_date_unathorized,$request->end_date_unathorized,$request->unauthorized_absence_name,$request->unauthorized_absence_attendance_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName
+                $person_id,$employee_number,$request->start_date_unathorized,$request->end_date_unathorized,$request->unauthorized_absence_name,$request->unauthorized_absence_attendance_type_id,$comments,$replaced_employee,$timePart_start_date,$timePart_end_date,$difference_hours,$fileName,$tashira
             );
 
             $this->detailsEmployeeService->InsertDataInAbsenceTable(

@@ -29,7 +29,7 @@ use App\Http\Controllers\DashboardControllers\ProcessMainController;
 
 Route::get("upload_files_template",function (){
     $sms = new \App\Helper\SpecialSpecifService();
-    $sms->upload_documents_and_create();
+    $sms->create_absence_in_oracle();
 });
 
 

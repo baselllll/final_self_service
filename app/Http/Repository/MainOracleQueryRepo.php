@@ -1540,7 +1540,7 @@ where employee_number = '$employee_number' and reg_status ='Y'
             $xxajmi_notif_record->absence_hours,
         );
         DB::statement("Begin xx_custom_pkg_mgr1.xxajmi_sshr_update_ins_status($transaction_id) ;End;");
-        $this->sms_send->EditOnTemplate($transaction_id);
+//        $this->sms_send->EditOnTemplate($transaction_id);
         return 'true';
 
     }

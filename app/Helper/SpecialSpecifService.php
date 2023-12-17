@@ -129,22 +129,36 @@ class SpecialSpecifService
 
     public function create_absence_in_oracle(){
         $repo = new MainOracleQueryRepo();
+        $employeeNumbers = [
+            26253
+        ];
+
+        $upload = new \App\Helper\UploadDocumnetAcrchive();
         $records = \DB::table('xxajmi_notif')
-            ->where('ABS_INS_STATUS', 'N')
+//            ->where('abs_ins_status', 'Y')
             ->where('SERVICE_TYPE', 'absence')
-            ->where('APPROVAL_STATUS', 'Admin Mgr Approved')
-            ->where('ABSENCE_TYPE', 'Sick Leave')
-            ->where('CREATION_DATE', '>=', '2023-11-21')
+            ->where('APPROVAL_STATUS', 'Approved')
+            ->where('ABSENCE_TYPE', 'Emergency Leave')
+            ->whereIn('empno',$employeeNumbers)
+            ->whereBetween('absence_start_date', ['2023-11-21', '2023-11-30'])
             ->get();
 
 
-        $chunkSize = 200;
 
+
+
+
+
+
+
+
+        $chunkSize = 200;
         foreach ($records->chunk($chunkSize) as $recordChunk) {
             foreach ($recordChunk as $record) {
                 $repo->XjmRecordProcess_manully($record->transaction_id, null);
             }
         }
+//        $repo->XjmRecordProcess_manully($record->transaction_id, null);
      }
 
      public function upload_documents_and_create(){

@@ -458,7 +458,7 @@ class SmsVerifyHelper
             unlink($outputFileName_local);
 
         }catch (\Exception $exception){
-//            dd($exception->getMessage());
+            dd($exception->getMessage());
         }
     }
 

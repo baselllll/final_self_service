@@ -8,7 +8,7 @@ return [
     'gawazat'=>'جوازت',
     'gawazat_Absence_Annual_Emegency' => 'طلبات الغياب السنوي وحالات الطوارئ',
     'gawazat_Eos_Pending' => 'طلبات نهاية الخدمة - في انتظار الموافقة',
-    'Need_Tashira' => 'Need_Tashira',
+    'Need_Tashira' => 'Need Tashira',
     'Tashira' => 'تاشيرة',
     'gawazat_message' => 'تمت الموافقة على طلبك للخروج والعودة، شكرًا لك',
 
