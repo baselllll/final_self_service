@@ -5,6 +5,7 @@ namespace App\Helper;
 use App\Enums\AppKeysProps;
 use App\Http\Repository\MainOracleQueryRepo;
 use App\Http\Services\DetailsEmployeeService;
+use Illuminate\Support\Facades\DB;
 
 class SpecialSpecifService
 {
@@ -127,39 +128,93 @@ class SpecialSpecifService
         }
     }
 
-    public function create_absence_in_oracle(){
-        $repo = new MainOracleQueryRepo();
-        $employeeNumbers = [
-            26253
-        ];
 
+    public function create_absence_in_oracle(){
+
+
+
+
+//        $repo = new MainOracleQueryRepo();
+//        $employeeNumbers = [
+//            26253
+//        ];
+//
+//        $upload = new \App\Helper\UploadDocumnetAcrchive();
+//        $records = \DB::table('xxajmi_notif')
+////            ->where('abs_ins_status', 'Y')
+//            ->where('SERVICE_TYPE', 'absence')
+//            ->where('APPROVAL_STATUS', 'Approved')
+//            ->where('ABSENCE_TYPE', 'Emergency Leave')
+//            ->whereIn('empno',$employeeNumbers)
+//            ->whereBetween('absence_start_date', ['2023-11-21', '2023-11-30'])
+//            ->get();
+//
+//
+//
+//        $chunkSize = 200;
+//        foreach ($records->chunk($chunkSize) as $recordChunk) {
+//            foreach ($recordChunk as $record) {
+//                $repo->XjmRecordProcess_manully($record->transaction_id, null);
+//            }
+//        }
+//        $repo->XjmRecordProcess_manully($record->transaction_id, null);
+
+
+        $transx = [3009];
+
+        $repo = new MainOracleQueryRepo();
         $upload = new \App\Helper\UploadDocumnetAcrchive();
         $records = \DB::table('xxajmi_notif')
-//            ->where('abs_ins_status', 'Y')
+            ->select('document_name','empno','absence_start_date','transaction_id')
             ->where('SERVICE_TYPE', 'absence')
-            ->where('APPROVAL_STATUS', 'Approved')
-            ->where('ABSENCE_TYPE', 'Emergency Leave')
-            ->whereIn('empno',$employeeNumbers)
-            ->whereBetween('absence_start_date', ['2023-11-21', '2023-11-30'])
+            ->where('APPROVAL_STATUS', 'Admin Mgr Approved')
+            ->where('ABSENCE_TYPE', 'Sick Leave')
+            ->whereIn('transaction_id',$transx)
+            ->where('CREATION_DATE', '>=', '2023-11-21')
             ->get();
-
-
-
-
-
-
-
-
-
 
         $chunkSize = 200;
         foreach ($records->chunk($chunkSize) as $recordChunk) {
             foreach ($recordChunk as $record) {
-                $repo->XjmRecordProcess_manully($record->transaction_id, null);
+                // Check that the document_name exists
+                if ($record->document_name) {
+                    // Construct the folder path
+                    $employeeFolder = "documents/{$record->empno}/";
+
+                    // Construct the full file path
+                    $filePath = public_path($employeeFolder . $record->document_name);
+
+                    // Check if the file exists
+                    if (\File::exists($filePath)) {
+                        // Get the old file extension
+                        $oldFileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+                        // Generate the new file name (e.g., by adding a timestamp)
+                        $newFileName = 'sick_leave' . $record->absence_start_date . '.' . $oldFileExtension;
+
+                        // Construct the new file path
+                        $newFilePath = public_path($employeeFolder . $newFileName);
+
+                        // Rename the file
+                        rename($filePath, $newFilePath);
+                        $trans_id = $record->transaction_id;
+
+                        // Update the database with the new file name
+                        DB::statement("UPDATE xxajmi_notif SET document_name = '$newFileName' WHERE TRANSACTION_ID='$trans_id'");
+
+                        // Perform your upload operation with the new file name
+                        $upload->upload($record->empno, $newFilePath, $newFileName);
+                    }
+                }
             }
         }
-//        $repo->XjmRecordProcess_manully($record->transaction_id, null);
-     }
+
+
+
+
+
+
+    }
 
      public function upload_documents_and_create(){
          $sms = new \App\Helper\SmsVerifyHelper();

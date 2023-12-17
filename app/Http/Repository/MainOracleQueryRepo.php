@@ -1172,7 +1172,6 @@ where employee_number = '$employee_number' and reg_status ='Y'
                 $employeeForFile = $xxajmi_notif->empno;
                 $folderPath = "documents/$employeeForFile";
                 $file = $xxajmi_notif->document_name;
-                $fileName = "$file";
 
                 // Full path to the public directory
                 $publicPath = public_path();

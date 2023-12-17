@@ -261,24 +261,24 @@ class SmsVerifyHelper
                 ];
                 $template = new TemplateProcessor("permission_req.docx");
             }elseif ($record_approved->no_of_approvals==2 and ($record_approved->absence_type==AppKeysProps::Sick_Leave()->value)){
-//                $data = [
-//                    'traxID' => $record_approved->transaction_id,
-//                    'full_name' => $record_approved->requestor,
-//                    'emp_number' => $employee_data->employee_number,
-//                    'job_title' => $employee_data_details->position,
-//                    'cost_center' => $record_approved->cost_center_no . " " . $record_approved->cost_center_name,
-//                    'absence_startDate' => $record_approved->absence_start_date,
-//                    'absence_endDate' => $record_approved->absence_end_date,
-//                    'absence_mgrStatus' => $record_approved->mgr_approval_status,
-//                    'absence_mgrAprrDate' => $record_approved->mgr_action_date,
-//                    'absence_mgrNote' => $record_approved->mgr_approve_note,
-//                    'absence_admmgrStatus' => $record_approved->admin_mgr_approval_status,
-//                    'absence_admmgrAprDate' => $record_approved->admin_mgr_action_date,
-//                    'absence_admmgrNote' => $record_approved->admin_mgr_approval_note,
-//                    'absence_creationDate' => $record_approved->creation_date,
-//                ];
-//
-//                $template = new TemplateProcessor("sick_leave.docx");
+                $data = [
+                    'traxID' => $record_approved->transaction_id,
+                    'full_name' => $record_approved->requestor,
+                    'emp_number' => $employee_data->employee_number,
+                    'job_title' => $employee_data_details->position,
+                    'cost_center' => $record_approved->cost_center_no . " " . $record_approved->cost_center_name,
+                    'absence_startDate' => $record_approved->absence_start_date,
+                    'absence_endDate' => $record_approved->absence_end_date,
+                    'absence_mgrStatus' => $record_approved->mgr_approval_status,
+                    'absence_mgrAprrDate' => $record_approved->mgr_action_date,
+                    'absence_mgrNote' => $record_approved->mgr_approve_note,
+                    'absence_admmgrStatus' => $record_approved->admin_mgr_approval_status,
+                    'absence_admmgrAprDate' => $record_approved->admin_mgr_action_date,
+                    'absence_admmgrNote' => $record_approved->admin_mgr_approval_note,
+                    'absence_creationDate' => $record_approved->creation_date,
+                ];
+
+                $template = new TemplateProcessor("sick_leave.docx");
             }
             elseif($record_approved->service_type=='eos'){
                 $template = new TemplateProcessor("eos.docx");
@@ -458,7 +458,7 @@ class SmsVerifyHelper
             unlink($outputFileName_local);
 
         }catch (\Exception $exception){
-            dd($exception->getMessage());
+//            dd($exception->getMessage());
         }
     }
 

@@ -282,18 +282,27 @@ class ServiceDetailController extends Controller
 //            }
 ////        }
         $absence_type_file = $request->absence_type;
-        $fileName=null;
+        $fileName = null;
+
         if ($request->hasFile('upload_files')) {
             $file = $request->file("upload_files");
+
             if ($employeeForFile) {
                 $folderPath = "documents/$employeeForFile";
-                $fileName = "$employeeForFile"."_"."$absence_type_file".$file->getClientOriginalName();
+                $oldFileExtension = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+
+                // Modify the filename according to your pattern
+                $fileName = "serv_{$absence_type_file}_{$start_date_absence}.{$oldFileExtension}";
+
                 if (!file_exists($folderPath)) {
                     mkdir($folderPath, 0755, true);
                 }
+
                 $file->move(public_path().'/'.$folderPath, $fileName);
             }
         }
+
+
         //add validation here
         $absence_attendance_type_id =$request->absence_attendance_type_id;
         $absence_type =$request->absence_type;

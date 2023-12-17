@@ -155,7 +155,9 @@
                                     <span  style="font-weight: bold;font-size: 14px;color: #0c4128"><span>@lang("messages.Total Days") : </span><span id="total_annual_unauthorized" style="font:bold 30px Aldhabi;color:  green"></span></span>
                                 </div>
 
-                                <label for="start_date">@lang('messages.Replacement Employee Number')</label>
+                                @if($absence_attendance_type_id==\App\Enums\AppKeysProps::Emergency_absence_type_id()->value or $absence_attendance_type_id==\App\Enums\AppKeysProps::Annual_Leave()->value)
+                                @else
+                                    <label for="start_date">@lang('messages.Replacement Employee Number')</label>
                                     <div class="form-floating">
 
                                         <select  name="replacement_employee_number" class="form-control">
@@ -168,9 +170,8 @@
                                         </select>
                                         <br/>
                                     </div>
+                                @endif
 
-
-{{--                                @endif--}}
 
                                 <div class="form-floating">
                                     <div id="file_uploaded" class="form-floating">

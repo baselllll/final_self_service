@@ -81,7 +81,7 @@ class UploadDocumnetAcrchive
 
             }
         }catch (\Exception $exception){
-             dd($exception->getMessage());
+//             dd($exception->getMessage());
         }
     }
 }

@@ -36,6 +36,7 @@ if(session()->has('employee') and session()->get('user_type') =="manger"){
                         @if(isset($getRequestsOfSpecficEmp_manger) and count($getRequestsOfSpecficEmp_manger) > 0)
                             {{count($getRequestsOfSpecficEmp_manger)}}
                         @else
+
                             0
                         @endif
                     </span>
@@ -45,7 +46,7 @@ if(session()->has('employee') and session()->get('user_type') =="manger"){
 
                             @if(isset($getRequestsOfSpecficEmp_manger))
                                 @foreach($getRequestsOfSpecficEmp_manger as $item)
-                                        <a target="_blank" href="get-details/{{$item->transaction_id}}" class="dropdown-item">
+                                        <a target="_blank" href="{{route('get-details',['transaction_id'=>$item->transaction_id])}}" class="dropdown-item">
                                             <i class="fas fa-comment-dots"></i>
                                             @if($item->approval_status=="Manager Approved")
                                                 <span style="font-weight: bold; text-decoration: underline" >Manager Approved</span>
